@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>A Template App</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://sdk.freshworks.com/js/sdk/v2.0.0.js"></script>
+    <script async src="{{{appclient}}}"></script>
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+</head>
+<body>
+   <script>
+        function hash(string) {
+  const utf8 = new TextEncoder().encode(string);
+  return crypto.subtle.digest('SHA-256', utf8).then((hashBuffer) => {
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((bytes) => bytes.toString(16).padStart(2, '0'))
+      .join('');
+    return hashHex;
+  });
+}
+        document.addEventListener("DOMContentLoaded", function () {
+          app.initialized().then(function (_client) {
+            var client = _client;
+            client.data.get('contact').then(function (data) {
+              var email = data.contact.email;
+              var gravatarUrl = getGravatarUrl(email);
+              document.getElementById('gravatar').src = gravatarUrl;
+            console.log(email)
+            });
+          });
+    
+          function getGravatarUrl(email) {
+            var hash2 = hash(email);
+            console.log(email)
+            console.log(hash2)
+            return 'https://www.gravatar.com/avatar/' + hash2;
+          }
+    
+         
+
+
+        });
+      </script>
+    <div class="main">
+        <p id="apptext">Hello World1</p>
+        <div id="app-container">
+             <img id="gravatar" alt="Gravatar">
+        </div> <!-- Container for the Gravatar image -->
+    </div>
+    <script defer src="scripts/app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+</body>
+</html>
+

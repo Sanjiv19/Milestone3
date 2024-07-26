@@ -1,0 +1,35 @@
+<script>
+    function hash(string) {
+const utf8 = new TextEncoder().encode(string);
+return crypto.subtle.digest('SHA-256', utf8).then((hashBuffer) => {
+const hashArray = Array.from(new Uint8Array(hashBuffer));
+const hashHex = hashArray
+  .map((bytes) => bytes.toString(16).padStart(2, '0'))
+  .join('');
+return hashHex;
+});
+}
+    document.addEventListener("DOMContentLoaded", function () {
+    
+       
+          var email = 'h@abc.com';
+          var gravatarUrl = getGravatarUrl(email);
+          document.getElementById('gravatar').src = gravatarUrl;
+        console.log(email)
+
+
+      function getGravatarUrl(email) {
+        var hash2 = hash(email);
+        console.log(email)
+        console.log(hash2)
+        return 'https://www.gravatar.com/avatar/' + hash;
+      }
+
+     
+
+//   function md5(string) {
+//     return CryptoJS.MD5(string).toString();
+//   }
+
+    });
+  </script>
