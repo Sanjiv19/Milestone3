@@ -10,7 +10,51 @@ html {
 
 .main {
   display: flex;
-  flex-flow: column wrap;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  height: 100vh; /* Full viewport height */
 }
+
+.tabs {
+  margin-top: auto; /* Push the buttons to the bottom */
+}
+
+.tab-button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+}
+
+.tab-button:hover {
+  background-color: #0056b3;
+}
+
+.view {
+  display: none;
+  text-align: center;
+}
+
+.view.active {
+  display: block;
+}
+
+#contact-info p {
+  margin: 5px 0;
+}
+
+#contact-email {
+  white-space: nowrap; /* Ensure email is on a single line */
+}
+
+img {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 50%;
+}
+
