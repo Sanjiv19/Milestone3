@@ -1,12 +1,7 @@
 function getGravatarUrl(email) {
   const trimmedEmail = email.trim().toLowerCase();
-  const emailHash = md5(trimmedEmail);
-  console.log('MD5 Hash:', emailHash); 
+  const emailHash = CryptoJS.MD5(trimmedEmail).toString(CryptoJS.enc.Hex);
   return `https://www.gravatar.com/avatar/${emailHash}`;
-}
-
-function md5(string) {
-  return CryptoJS.MD5(string).toString(CryptoJS.enc.Hex); // Ensure the hash is in hexadecimal format
 }
 
 var client;
@@ -16,51 +11,66 @@ init();
 async function init() {
   try {
     client = await app.initialized();
-    client.events.on('app.activated', renderText);
+    client.events.on('app.activated', renderContent);
   } catch (error) {
     console.error('Error initializing app:', error);
   }
 }
 
-async function renderText() {
+async function renderContent() {
   try {
     const contactData = await client.data.get('contact');
-    console.log('Contact Data:', contactData);
+    const email = contactData.contact ? contactData.contact.email : '';
+    const name = contactData.contact ? contactData.contact.name : 'Unknown';
 
-    let email = '';
-    if (contactData && contactData.contact && contactData.contact.email) {
-      email = contactData.contact.email;
-    } else if (contactData && contactData.agents && contactData.agents[0] && contactData.agents[0].subText) {
-      email = contactData.agents[0].subText;
-    }
-
-    console.log('Extracted Email:', email);
-
+    // Render Gravatar section
     if (email) {
       const gravatarUrl = getGravatarUrl(email);
-
-      console.log('Gravatar URL:', gravatarUrl);
-
-      const imgElement = document.createElement('img');
-      imgElement.src = gravatarUrl;
-      imgElement.alt = 'User Gravatar';
-      imgElement.width = 100;
-      imgElement.height = 100;
-
-      const appContainer = document.getElementById('app-container');
-      appContainer.innerHTML = ''; // Clear any existing content before adding the new image
-      appContainer.appendChild(imgElement);
+      const gravatarElement = document.getElementById('gravatar');
+      gravatarElement.src = gravatarUrl;
+      gravatarElement.alt = `Gravatar for ${email}`;
+      gravatarElement.onload = function() {
+        console.log("Gravatar image loaded successfully.");
+      };
+      gravatarElement.onerror = function() {
+        console.error("Failed to load Gravatar image. Check the URL: ", gravatarUrl);
+      };
     } else {
-      console.warn('No valid email found for the contact.');
+      console.warn('No valid email found for Gravatar.');
     }
+
+    // Render Contact Details section
+    document.getElementById('contact-name').innerText = name;
+    document.getElementById('contact-email').innerText = email;
+
+    // Initialize with the Gravatar view active
+    showView('gravatar-view', 'contact-details-button');
+
   } catch (error) {
-    console.error('Error rendering text:', error);
+    console.error('Error rendering content:', error);
+  }
+}
+
+function showView(viewIdToShow, buttonToShowId) {
+  // Hide all views
+  const views = document.querySelectorAll('.view');
+  views.forEach(view => {
+    view.classList.remove('active');
+  });
+
+  // Show the selected view
+  const activeView = document.getElementById(viewIdToShow);
+  if (activeView) {
+    activeView.classList.add('active');
+  }
+
+  document.querySelectorAll('.tab-button').forEach(button => {
+    button.style.display = 'none';
+  });
+  const buttonToShow = document.getElementById(buttonToShowId);
+  if (buttonToShow) {
+    buttonToShow.style.display = 'inline-block';
   }
 }
 
 
-
-
-function md5(string) {
-  return CryptoJS.MD5(string).toString();
-}
