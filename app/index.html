@@ -8,47 +8,32 @@
     <script src="https://sdk.freshworks.com/js/sdk/v2.0.0.js"></script>
     <script async src="{{{appclient}}}"></script>
     <link rel="stylesheet" type="text/css" href="styles/style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script> <!-- Use latest version if needed -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
-   <script>
-        function hash(string) {
-  const utf8 = new TextEncoder().encode(string);
-  return crypto.subtle.digest('SHA-256', utf8).then((hashBuffer) => {
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-      .map((bytes) => bytes.toString(16).padStart(2, '0'))
-      .join('');
-    return hashHex;
-  });
-}
-        document.addEventListener("DOMContentLoaded", function () {
-          app.initialized().then(function (_client) {
-            var client = _client;
-            client.data.get('contact').then(function (data) {
-              var email = data.contact.email;
-              var gravatarUrl = getGravatarUrl(email);
-              document.getElementById('gravatar').src = gravatarUrl;
-            console.log(email)
-            });
-          });
-    
-          function getGravatarUrl(email) {
-            var hash2 = hash(email);
-            console.log(email)
-            console.log(hash2)
-            return 'https://www.gravatar.com/avatar/' + hash2;
-          }
-        });
-      </script>
     <div class="main">
-        <p id="apptext">Hello World1</p>
-        <div id="app-container">
-             <img id="gravatar" alt="Gravatar" />
-        </div> <!-- Container for the Gravatar image -->
+        <!-- Section for Gravatar -->
+        <div id="gravatar-view" class="view">
+            <h2>Gravatar</h2>
+            <img id="gravatar" alt="User Gravatar" />
+        </div>
+
+        <!-- Section for Contact Details -->
+        <div id="contact-details-view" class="view">
+            <h2>Contact Details</h2>
+            <div id="contact-info">
+                <p>Name: <span id="contact-name"></span></p>
+                <p>Email: <span id="contact-email"></span></p>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button id="gravatar-button" class="tab-button" onclick="showView('gravatar-view', 'contact-details-button')">Gravatar</button>
+            <button id="contact-details-button" class="tab-button" onclick="showView('contact-details-view', 'gravatar-button')">Contact Details</button>
+        </div>
     </div>
-    <script defer src="scripts/app.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+    <script src="scripts/app.js"></script>
 </body>
 </html>
+
 
