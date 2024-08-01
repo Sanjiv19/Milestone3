@@ -24,7 +24,6 @@ async function init() {
 
 async function renderText() {
   try {
-    const textElement = document.getElementById('apptext');
     const contactData = await client.data.get('contact');
     console.log('Contact Data:', contactData);
 
